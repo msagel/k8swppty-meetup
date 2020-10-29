@@ -24,7 +24,7 @@ Crearemos un wordpress altamente reduntante que contendra 2 base de datos replic
 
 ```bash
 $ helm install nfs-server stable/nfs-server-provisioner --set persistence.enabled=true,persistence.size=25Gi
-$ helm install k8swp bitnami/wordpress --set mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,global.storageClass=nfs
+$ helm upgrade k8swp bitnami/wordpress --set mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,global.storageClass=nfs,wordpressFirstName=Wordpress,wordpressLastName="en Kubernetes",wordpressBlogName="Wordpress en K8s",wordpressEmail=wordpress@k8s.com
 ```
 
 ## Prueba de servicios
@@ -51,12 +51,22 @@ Le aparecera el detalle del servicio que contendra el ip publico par poder conec
 
 Solo es necesario poner el Ip en un navegadore y tendriamos acceso a wordpress.
 
+## Accesar al portal de administracion
+
+El usuario para entrar como administrador es `user` pero el password se encuentra en un secreto para poder obtener el secreto se ejecuta el siguiente comando:
+
+```bash
+echo Password: $(kubectl get secret --namespace default k8swp-wordpress -o jsonpath="{.data.wordpress-password}" | base64 --decode)
+```
+
+## Ejecutar comandos de wp-cli
+
 
 
 ## Aumentar las replicas
 
 ```bash
-helm install k8swp bitnami/wordpress --set replicaCount=3,mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,persistence.storageClass=nfs,global.storageClass=nfs
+helm upgrade k8swp bitnami/wordpress --set replicaCount=3,mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,global.storageClass=nfs,wordpressFirstName=Wordpress,wordpressLastName="en Kubernetes",wordpressBlogName="Wordpress en K8s",wordpressEmail=wordpress@k8s.com
 ```
 
 ## Comentarios
