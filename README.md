@@ -20,17 +20,23 @@ $ helm repo update
 
 ## Despliegue de Wordpress
 
-Crearemos un wordpress altamente reduntante que contendra 2 base de datos replicadas y 3 contenedores de wordpress en balanceo accesible de internet. El comando para levantar la solucion en una solucion de nube es el siguiente:
+Crearemos un wordpress altamente reduntante que contendra 2 base de datos replicadas, para poder aumentar replicas tendriamos que hacer que wp-content este en un compartido nsf que puedan accesar mas de un contenedor. El comando para levantar la solucion en una solucion de nube es el siguiente:
 
 ```bash
 $ helm install nfs-server stable/nfs-server-provisioner --set persistence.enabled=true,persistence.size=60Gi
-$ helm install k8swp bitnami/wordpress --set replicaCount=3,mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,persistence.storageClass=nfs,mariadb.master.persistence.storageClass=nfs,mariadb.master.persistence.accessModes=ReadWriteMany
+$ helm install k8swp bitnami/wordpress --set mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,persistence.storageClass=nfs,mariadb.master.persistence.storageClass=nfs
 ```
 
 ## Prueba de servicios
 
 ```bash
 kubectl get svc --namespace default -w k8swp-wordpress
+```
+
+## Aumentar las replicas
+
+```bash
+helm install k8swp bitnami/wordpress --set replicaCount=3,mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,persistence.storageClass=nfs,mariadb.master.persistence.storageClass=nfs,mariadb.master.persistence.accessModes=ReadWriteMany
 ```
 
 ---
@@ -45,4 +51,4 @@ kubectl get svc --namespace default -w k8swp-wordpress
 [kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
 [helm]: https://helm.sh/docs/intro/install/
 [bitwp]: https://github.com/bitnami/charts/tree/master/bitnami/wordpress
-[nfs]:https://github.com/helm/charts/tree/master/stable/nfs-server-provisioner
+[nfs]: https://github.com/helm/charts/tree/master/stable/nfs-server-provisioner
