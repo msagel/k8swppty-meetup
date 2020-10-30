@@ -61,7 +61,9 @@ echo Password: $(kubectl get secret --namespace default k8swp-wordpress -o jsonp
 
 ## Ejecutar comandos de wp-cli
 
-
+```bash
+kubectl exec $(kubectl get pods -l app.kubernetes.io/name=wordpress -o jsonpath='{.items[0].metadata.name}') -c wordpress -- wp maintenance-mode activate
+```
 
 ## Aumentar las replicas
 
@@ -71,7 +73,7 @@ helm upgrade k8swp bitnami/wordpress --set replicaCount=3,mariadb.replication.en
 
 ## Comentarios
 
-[Minikube][mkinst], [microk8s][mk8s], [docker for windows][dw] con k8s habilitado, [docker for mac][dm] con k8s habilitado o
+El demo esta pensado en hacerse en una solucion en la nube pero tambien se puede hacer en soluciones locales como[Minikube][mkinst], [microk8s][mk8s], [docker for windows][dw] con k8s habilitado, [docker for mac][dm] con k8s habilitado. Pero sera necesario crear un `ingress controller` para que funciones correctamente ademas de cambiar el service a `ClusterIP` 
 
 [mkinst]: https://github.com/kubernetes/minikube
 [mk8s]: https://microk8s.io/
