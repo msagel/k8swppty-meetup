@@ -24,7 +24,7 @@ Crearemos un wordpress altamente reduntante que contendra 2 base de datos replic
 
 ```bash
 $ helm install nfs-server stable/nfs-server-provisioner --set persistence.enabled=true,persistence.size=25Gi
-$ helm upgrade k8swp bitnami/wordpress --set mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,global.storageClass=nfs,wordpressFirstName=Wordpress,wordpressLastName="en Kubernetes",wordpressBlogName="Wordpress en K8s",wordpressEmail=wordpress@k8s.com
+$ helm install k8swp bitnami/wordpress --set mariadb.replication.enabled=true,persistence.accessMode=ReadWriteMany,global.storageClass=nfs,wordpressFirstName=Wordpress,wordpressLastName="en Kubernetes",wordpressBlogName="Wordpress en K8s",wordpressEmail=wordpress@k8s.com
 ```
 
 ## Prueba de servicios
